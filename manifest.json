@@ -1,0 +1,36 @@
+{
+    // Required
+    "name": "AlwaysBcc for Gmail",
+    "version": "0.1",
+    "manifest_version": 2,
+
+    // Recommended
+    "description": "Automatically set BCC on all outgoing email",
+/*
+    "icons": {
+        "16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    },
+*/
+
+/* need to actually create these icons */
+
+    "background": { "scripts": ["background.js"] },
+    "page_action": {
+        "default_icon": "bcc.png",
+        "default_title": "AlwaysBcc"
+    },
+    "permissions" : ["tabs"],
+    "options_page": "options/index.html",
+    "content_scripts": [
+        {
+            "matches": ["http://mail.google.com/*", "https://mail.google.com/*"],
+            "css": ["style.css"],
+            "js": ["jquery-1.7.2.min.js", "contentScript.js"],
+            "all_frames": true
+        }
+    ]
+
+
+}

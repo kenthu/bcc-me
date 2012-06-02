@@ -1,0 +1,9 @@
+span#alwaysBcc_control {
+    background: #CCC;
+    color: black;
+    display: block;
+    font-size: 13px;
+    height: 26px;
+    margin: 0px 1px 0px 13px;
+    padding: 2px 5px 2px 5px;
+}
