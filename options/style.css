@@ -1,13 +1,3 @@
 body { font-family: arial, sans-serif }
 
-/*
-#status {
-    visibility: hidden;
-    width: 15em;
-    color: white;
-    background: #00C000;
-    padding: 3px;
-    text-align: center;
-    font-weight: bold;
-}
-*/
+#email { width: 25em }

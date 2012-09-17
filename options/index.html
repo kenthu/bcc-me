@@ -1,18 +1,32 @@
 <!doctype html>
 <html>
 <head>
-	<title>AlwaysBcc Options</title>
-	<link rel="stylesheet" href="style.css" type="text/css">
+    <title>AlwaysBcc Options</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body>
 
 <h2>AlwaysBcc Options</h2>
 
-<p><label>BCC Email:</label> <input id="email"></p>
+<table>
+    <tr>
+        <td><label for="email">BCC Email</label></td>
+        <td><input id="email"></td>
+        <td>This email address will automatically be added to the Bcc field on all outgoing emails</td>
+    </tr>
+    <tr>
+        <td><label for="activeStatus">Active</label></td>
+        <td><input id="activeStatus" type="checkbox"></td>
+        <td>Uncheck to temporarily keep extension from adding Bcc email</td>
+    </tr>
+    <tr>
+        <td><label for="displayMenu">Show AlwaysBcc menu inside Gmail page</label></td>
+        <td><input id="displayMenu" type="checkbox"></td>
+        <td></td>
+    </tr>
+</table>
 
 <p><button id="saveButton">Save</button> <button id="cancelButton">Cancel</button></p>
-
-<!--<div id="status">Options Saved</div>-->
 
 <script type="text/javascript" src="options.js"></script>
 

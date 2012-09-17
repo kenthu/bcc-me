@@ -1,24 +1,20 @@
 // Restore options on page load
 document.body.onload = function() {
-    var email = localStorage['email'];
-    if (email) {
-        document.getElementById('email').value = email;
-    }
+    document.getElementById('activeStatus').checked = (options.get('activeStatus') === 'active');
+    document.getElementById('displayMenu').checked = (options.get('displayMenu') === 'true');
+    document.getElementById('email').value = options.get('email');
+
     document.getElementById('email').focus();
 };
 
 // Save button: save options and close window
 document.getElementById('saveButton').onclick = function() {
-    var email = document.getElementById('email').value;
-    localStorage['email'] = email;
-
-    chrome.extension.sendRequest({command: 'getRegisteredTabs'}, function(response) {
-        for (var tabID in response.registeredTabs) {
-            //console.log('AlwaysBCC: Sending saved options to tab ' + tabID);
-            chrome.tabs.sendRequest(parseInt(tabID), {command: 'setEmail', email: email});
-        }
-        window.close();
-    });
+    chrome.extension.sendRequest({command: 'setOptions', options: {
+        activeStatus: (document.getElementById('activeStatus').checked ? 'active' : 'inactive'),
+        displayMenu: (document.getElementById('displayMenu').checked ? 'true' : 'false'),
+        email: document.getElementById('email').value
+    }});
+    window.close();
 };
 
 // Cancel button: close window
