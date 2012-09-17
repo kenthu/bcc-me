@@ -124,7 +124,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 });
 
 function getIconFilename() {
-    return options.get('activeStatus') === 'active' ? 'bcc.png' : 'bccOff.png';
+    return 'icons/' + (options.get('activeStatus') === 'active' ? 'bcc.png' : 'bccOff.png');
 }
 
 chrome.pageAction.onClicked.addListener(function(tab) {
