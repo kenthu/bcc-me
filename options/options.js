@@ -1,10 +1,12 @@
 // Restore options on page load
 document.body.onload = function() {
-    document.getElementById('activeStatus').checked = (options.get('activeStatus') === 'active');
-    document.getElementById('displayMenu').checked = (options.get('displayMenu') === 'true');
-    document.getElementById('email').value = options.get('email');
+    chrome.extension.sendRequest({command: 'getOptions'}, function(response) {
+        document.getElementById('activeStatus').checked = (response.options['activeStatus'] === 'active');
+        document.getElementById('displayMenu').checked = (response.options['displayMenu'] === 'true');
+        document.getElementById('email').value = response.options['email'];
 
-    document.getElementById('email').focus();
+        document.getElementById('email').focus();
+    });
 };
 
 // Save button: save options and close window
