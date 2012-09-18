@@ -18,7 +18,7 @@
 
     "background": { "scripts": ["background.js"] },
     "page_action": {
-        "default_title": "AlwaysBcc\n(left-click to pause/unpause)\n(right-click for options)"
+        "default_title": "AlwaysBcc for Gmail\n(left-click to pause/unpause)\n(right-click for options)"
     },
     "permissions" : ["tabs"],
     "options_page": "options/index.html",

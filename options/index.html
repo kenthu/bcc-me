@@ -6,25 +6,25 @@
 </head>
 <body>
 
-<h2>AlwaysBcc Options</h2>
+<h1>AlwaysBcc Options</h1>
 
-<table>
-    <tr>
-        <td><label for="email">BCC Email</label></td>
-        <td><input id="email"></td>
-        <td>This email address will automatically be added to the Bcc field on all outgoing emails</td>
-    </tr>
-    <tr>
-        <td><label for="activeStatus">Active</label></td>
-        <td><input id="activeStatus" type="checkbox"></td>
-        <td>Uncheck to temporarily keep extension from adding Bcc email</td>
-    </tr>
-    <tr>
-        <td><label for="displayMenu">Show AlwaysBcc menu inside Gmail page</label></td>
-        <td><input id="displayMenu" type="checkbox"></td>
-        <td></td>
-    </tr>
-</table>
+<p>
+    <div class="label">Bcc Email</div>
+    <div class="settingLine">This email address will automatically be added to the Bcc field on all outgoing email.</div>
+    <div class="settingLine"><input id="email"></div>
+</p>
+
+<p>
+    <div class="label">Pausing</div>
+    <div class="settingLine">Select "Paused" to temporarily stop setting the Bcc field. (You can also pause from the <img src="dropdown.png" style="vertical-align: -4px"> dropdown menu or by clicking on the <img src="../icons/bcc.png" style="vertical-align: -6px"> icon in the Chrome address bar.)</div>
+    <div class="settingLine"><input name="activeStatus" id="activeStatus_active" type="radio"> <label for="activeStatus_active">Working</label></div>
+    <div class="settingLine"><input name="activeStatus" id="activeStatus_inactive" type="radio"> <label for="activeStatus_inactive">Paused</label></div>
+</p>
+
+<p>
+    <div class="label">Dropdown menu</div>
+    <div class="settingLine"><input id="displayMenu" type="checkbox"> <label for="displayMenu">Show <img src="dropdown.png" style="vertical-align: -4px"> dropdown menu inside Gmail page, in the black Google bar at top of page.</label></div>
+</p>
 
 <p><button id="saveButton">Save</button> <button id="cancelButton">Cancel</button></p>
 

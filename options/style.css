@@ -1,3 +1,28 @@
-body { font-family: arial, sans-serif }
+body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    color: #303942;
+}
 
-#email { width: 25em }
+h1 {
+    font-size: 18px;
+    font-weight: normal;
+}
+
+div.label {
+    font-size: 14px;
+}
+
+div.settingLine {
+    margin-top: 7px;
+    margin-left: 18px;
+    font-size: 12px;
+}
+
+input {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-size: 12px;
+}
+
+#email {
+    width: 20em
+}
