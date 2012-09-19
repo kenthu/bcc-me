@@ -53,6 +53,26 @@ function openOptionsPage() {
     chrome.extension.sendRequest({command: 'openOptionsPage'});
 }
 
+function htmlEncode(value) {
+    return $('<div/>').text(value).html();
+}
+
+function getActiveStatusMenuItemText() {
+    if (email) {
+        return activeStatus === 'active' ? 'Status: <strong>Working</strong> <em>(click to pause)</em>' : 'Status: <strong>Paused</strong> <em>(click to unpause)</em>';
+    } else {
+        return 'Status: <strong>Bcc email not set</strong>';
+    }
+}
+
+function getEmailMenuItemText() {
+    if (email) {
+        return 'Bcc: <strong>' + htmlEncode(email) + '</strong> <em>(click to change)</em>';
+    } else {
+        return 'Bcc: <strong>Not set</strong> <em>(click to set)</em>';
+    }
+}
+
 function toggleMenuItems(e) {
     showingMenuItems = !showingMenuItems;
     if (showingMenuItems) {
@@ -61,12 +81,14 @@ function toggleMenuItems(e) {
             <div id="abcc_menuDropdown">	\
                 <ol id="abcc_menuDropdownList">	\
                     <li><a class="abcc_menuItem" id="item_activeInactive">' + getActiveStatusMenuItemText() + '</a></li>	\
+                    <li><a class="abcc_menuItem" id="item_email">' + getEmailMenuItemText() + '</a></li>	\
                     <li><a class="abcc_menuItem" id="item_options">Options</a></li>	\
                     <li><a class="abcc_menuItem" id="item_hideMenu">Hide This Menu</a></li>	\
                 </ol>	\
             </div>');
         $('#abcc_menuTriangle').addClass('on');
         $('#item_activeInactive').click(toggleActiveStatus);
+        $('#item_email').click(openOptionsPage);
         $('#item_options').click(openOptionsPage);
         $('#item_hideMenu').click(setDisplayMenuOff);
     } else {
@@ -121,10 +143,6 @@ function showOrHideMenu(oldValue, newValue) {
     }
 }
 
-function getActiveStatusMenuItemText() {
-    return activeStatus === 'active' ? 'Status: Working <em>(click to pause)</em>' : 'Status: Paused <em>(click to unpause)</em>';
-}
-
 function handleUpdatedOptions(options) {
     if (options['activeStatus'] !== undefined) {
         //console.log('AlwaysBcc: Set activeStatus to "' + options['activeStatus'] + '" in content script');
@@ -140,11 +158,17 @@ function handleUpdatedOptions(options) {
     if (options['email'] !== undefined) {
         //console.log('AlwaysBcc: Set email to "' + options['email'] + '" in content script');
         email = options['email'];
+        $('#item_email').html(getEmailMenuItemText());
+        // email setting will affect what active status gets displayed 
+        $('#item_activeInactive').html(getActiveStatusMenuItemText());
     }
 }
 
 $(document).ready(function() {
     if (window != window.top && window.frameElement.id == 'canvas_frame') {
+        // Initialize options to defaults, if not already set
+        chrome.extension.sendRequest({command: 'initOptions'});
+
         // Register tab
         chrome.extension.sendRequest({command: 'registerTab'});
 

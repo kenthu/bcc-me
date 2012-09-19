@@ -33,7 +33,8 @@ var options = {
         email: ''
     },
 
-    setDefaults: function() {
+    // Set defaults on all options, so we don't have to worry about undefineds
+    init: function() {
         for (var option in this.defaults) {
             if (localStorage[option] === undefined) {
                 localStorage[option] = this.defaults[option];
@@ -85,8 +86,7 @@ var options = {
     }
 };
 
-// Set defaults on all options, so we don't have to worry about undefineds
-options.setDefaults();
+options.init();
 
 // Show "bcc" page action icon for all Gmail pages
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
@@ -117,6 +117,9 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
         break;
     case 'setIcon':
         chrome.pageAction.setIcon({path: getIconFilename(), tabId: sender.tab.id});
+        break;
+    case 'initOptions':
+        options.init();
         break;
     default:
         console.error('AlwaysBcc: Invalid command sent to background.js: ' + request.command);
