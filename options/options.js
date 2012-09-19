@@ -1,29 +1,37 @@
-// Restore options on page load
 document.body.onload = function() {
-    chrome.extension.sendRequest({command: 'getOptions'}, function(response) {
-        if (response.options['activeStatus'] === 'active') {
-            document.getElementById('activeStatus_active').checked = true;
-        } else {
-            document.getElementById('activeStatus_inactive').checked = true;
-        }
-        document.getElementById('displayMenu').checked = (response.options['displayMenu'] === 'true');
-        document.getElementById('email').value = response.options['email'];
+    // Initialize options to defaults, if not already set
+    chrome.extension.sendRequest({command: 'initOptions'}, getOptions);
 
-        document.getElementById('email').focus();
-    });
+    // Save button: save options and close window
+    document.getElementById('saveButton').onclick = function() {
+        chrome.extension.sendRequest({command: 'setOptions', options: {
+            activeStatus: (document.getElementById('activeStatus_active').checked ? 'active' : 'inactive'),
+            displayMenu: (document.getElementById('displayMenu').checked ? 'true' : 'false'),
+            email: document.getElementById('email').value
+        }});
+        window.close();
+    };
+
+    // Cancel button: close window
+    document.getElementById('cancelButton').onclick = function() {
+        window.close();
+    };
 };
 
-// Save button: save options and close window
-document.getElementById('saveButton').onclick = function() {
-    chrome.extension.sendRequest({command: 'setOptions', options: {
-        activeStatus: (document.getElementById('activeStatus_active').checked ? 'active' : 'inactive'),
-        displayMenu: (document.getElementById('displayMenu').checked ? 'true' : 'false'),
-        email: document.getElementById('email').value
-    }});
-    window.close();
-};
+// Retrieve options
+function getOptions(response) {
+    chrome.extension.sendRequest({command: 'getOptions'}, loadOptions);
+}
 
-// Cancel button: close window
-document.getElementById('cancelButton').onclick = function() {
-    window.close();
-};
+// Load options
+function loadOptions(response) {
+    if (response.options['activeStatus'] === 'active') {
+        document.getElementById('activeStatus_active').checked = true;
+    } else {
+        document.getElementById('activeStatus_inactive').checked = true;
+    }
+    document.getElementById('displayMenu').checked = (response.options['displayMenu'] === 'true');
+    document.getElementById('email').value = response.options['email'];
+
+    document.getElementById('email').focus();
+}

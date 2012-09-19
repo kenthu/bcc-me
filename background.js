@@ -33,7 +33,7 @@ var options = {
         email: ''
     },
 
-    // Set defaults on all options, so we don't have to worry about undefineds
+    // Set defaults on all undefined options, so we don't have to worry about undefineds
     init: function() {
         for (var option in this.defaults) {
             if (localStorage[option] === undefined) {
@@ -120,6 +120,8 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
         break;
     case 'initOptions':
         options.init();
+        // Send empty response so that options page can proceed
+        sendResponse({});
         break;
     default:
         console.error('AlwaysBcc: Invalid command sent to background.js: ' + request.command);
