@@ -33,10 +33,26 @@ var options = {
         email: ''
     },
 
-    // Set defaults on all undefined options, so we don't have to worry about undefineds
+    isValid: function(option, value) {
+        switch (option) {
+        case 'activeStatus':
+            return (value === 'active' || value === 'inactive');
+            break;
+        case 'displayMenu':
+            return (value === 'true' || value === 'false');
+            break;
+        case 'email':
+            return (typeof(value) === 'string');
+            break;
+        default:
+            return false;
+        }
+    },
+
+    // Set defaults on all invalid/undefined options, so we don't have to worry about undefineds
     init: function() {
         for (var option in this.defaults) {
-            if (localStorage[option] === undefined) {
+            if (!(this.isValid(option, localStorage[option]))) {
                 localStorage[option] = this.defaults[option];
             }
         }
@@ -57,10 +73,14 @@ var options = {
     },
 
     set: function(optionsToSet, firstTabToApply) {
+        var validatedOptions = {};
         for (var option in optionsToSet) {
-            localStorage[option] = optionsToSet[option];
+            if (this.isValid(option, optionsToSet[option])) {
+                localStorage[option] = optionsToSet[option];
+                validatedOptions[option] = optionsToSet[option];
+            }
         }
-        this.propagate(firstTabToApply, optionsToSet);
+        this.propagate(firstTabToApply, validatedOptions);
     },
 
     // Propagate a setting change to all tabs
@@ -79,7 +99,7 @@ var options = {
     },
 
     // For testing only ...
-    clearOptions: function() {
+    clear: function() {
         for (var option in this.defaults) {
             delete localStorage[option];
         }
