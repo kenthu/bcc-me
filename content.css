@@ -1,7 +1,12 @@
 #abcc_menu {
     display: inline-block;
-    line-height: 19px;
+    line-height: 24px;
     vertical-align: top;
+}
+
+/* alternate Compact version */
+.gbesi#gb #gbzw #abcc_menu, .gbes#gbzw #abcc_menu {
+    line-height: 19px;
 }
 
 #abcc_menu.on {
@@ -19,8 +24,13 @@
     border-right-style: solid;
     border-right-width: 1px;
     display: block;
-    padding: 2px 9px 3px 5px;
+    padding: 3px 9px 3px 5px;
     font-weight: bold;
+}
+
+/* alternate Compact version */
+.gbesi#gb #gbzw #abcc_menuLink, .gbes#gbzw #abcc_menuLink {
+    padding: 2px 9px 3px 5px;
 }
 
 #abcc_menuLink:hover {
