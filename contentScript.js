@@ -1,6 +1,7 @@
 var MAX_RETRIES = 20;
 var TIME_TO_FIRST_CHECK = 500;
 var TIME_BETWEEN_CHECKS = 1500;
+var INIT_TIMEOUTS = [0.25, 0.25, 0.5, 1, 1, 2, 3, 5];
 
 var activeStatus;
 var displayMenu = 'false';  // Start with 'false' so that on page load, menu will be displayed if displayMenu is actually 'true'
@@ -165,32 +166,79 @@ function handleUpdatedOptions(options) {
 }
 
 $(document).ready(function() {
-    if (window != window.top && window.frameElement.id == 'canvas_frame') {
-        // Initialize options to defaults, if not already set
-        chrome.extension.sendRequest({command: 'initOptions'});
-
-        // Register tab
-        chrome.extension.sendRequest({command: 'registerTab'});
-
-        // Set up handler to unregister tab when tab closes
-        window.onbeforeunload = function() {
-            chrome.extension.sendRequest({command: 'unregisterTab'});
-        };
-
-        // Load and apply options
-        chrome.extension.sendRequest({command: 'getOptions'}, function(response) {
-            handleUpdatedOptions(response.options);
-        });
-
-        // Set up handlers for updated options and statuses
-        chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-            if (request.command === 'handleUpdatedOptions') {
-                handleUpdatedOptions(request.options);
-            } else {
-                console.error('AlwaysBcc: Invalid command sent to content script: ' + request.command);
-            }
-        });
-
-        setTimeout(findBcc, TIME_TO_FIRST_CHECK);
-    }
+    checkInit(0);
 });
+
+
+function checkInit(timeoutIndex) {
+    /*
+    For a given tab, this script is inserted into every document (the main window and all iframes).  It should
+    only be initialized in one, though.  So how do we figure out which document to initialize in?  Well, there
+    are two ways the main Gmail window is displayed:
+
+        1. In top window (but only if it doesn't have an iframe named canvas_frame)
+        2. In iframe named canvas_frame
+
+    The tricky part is, sometimes, the top window will have an iframe named canvas_frame, so we might think it's
+    case #2 and move on.  However, later, after Gmail has finally finished loading, the canvas_frame will
+    disappear.  At that point, we realize it's case #1.
+
+    This is how we check:
+
+    if top window
+        if canvas frame exists, then check again later to make sure it's still there
+        if canvas frame does not exist, then init
+    if iframe
+        if canvas_frame, then init
+        if other iframe, then quit trying
+    */
+
+    if (window === window.top) {
+        if (document.getElementById('canvas_frame')) {
+            // Check again later
+            if (INIT_TIMEOUTS[timeoutIndex]) {
+                //console.log('Check again in ' + INIT_TIMEOUTS[timeoutIndex] + ' seconds');
+                setTimeout(checkInit, INIT_TIMEOUTS[timeoutIndex] * 1000, timeoutIndex+1);
+            }
+        } else {
+            // Case #1
+            //console.log('Initializing (in top window)');
+            init();
+        }
+    } else {
+        if (window.frameElement.id === 'canvas_frame') {
+            // Case #2
+            //console.log('Initializing (in iframe)');
+            init();
+        }
+    }
+}
+
+function init() {
+    // Initialize options to defaults, if not already set
+    chrome.extension.sendRequest({command: 'initOptions'});
+
+    // Register tab
+    chrome.extension.sendRequest({command: 'registerTab'});
+
+    // Set up handler to unregister tab when tab closes
+    window.onbeforeunload = function() {
+        chrome.extension.sendRequest({command: 'unregisterTab'});
+    };
+
+    // Load and apply options
+    chrome.extension.sendRequest({command: 'getOptions'}, function(response) {
+        handleUpdatedOptions(response.options);
+    });
+
+    // Set up handlers for updated options and statuses
+    chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+        if (request.command === 'handleUpdatedOptions') {
+            handleUpdatedOptions(request.options);
+        } else {
+            console.error('AlwaysBcc: Invalid command sent to content script: ' + request.command);
+        }
+    });
+
+    setTimeout(findBcc, TIME_TO_FIRST_CHECK);
+}
