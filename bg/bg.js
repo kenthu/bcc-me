@@ -133,7 +133,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
         options.set(request.options, sender.tab);
         break;
     case 'openOptionsPage':
-        chrome.tabs.create({url: "options/index.html"});
+        chrome.tabs.create({url: "options/options.html"});
         break;
     case 'setIcon':
         chrome.pageAction.setIcon({path: getIconFilename(), tabId: sender.tab.id});
@@ -144,7 +144,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
         sendResponse({});
         break;
     default:
-        console.error('AlwaysBcc: Invalid command sent to background.js: ' + request.command);
+        console.error('AlwaysBcc: Invalid command sent to bg.js: ' + request.command);
     }
 });
 
