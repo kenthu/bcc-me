@@ -106,7 +106,38 @@ var options = {
     }
 };
 
+// Based on Mohamed Mansour's code here:  http://stackoverflow.com/a/2401788/631303
+var version = {
+    // Other people seem to use chrome.app.getDetails().version, but that isn't currently a supported public
+    // API.  Once there's something supported, we can stop putting the current version in multiple places.
+    current: "0.1",
+
+    check: function() {
+        // Check if the version has changed.
+        var currVersion = this.current;
+        var savedVersion = localStorage['version']
+        if (currVersion !== savedVersion) {
+            if (savedVersion === undefined) {
+                this.onInstall();
+            } else {
+                this.onUpdate();
+            }
+            localStorage['version'] = currVersion;
+        }
+    },
+
+    onInstall: function() {
+        chrome.tabs.create({url: "help/gettingStarted.html"});
+    },
+
+    onUpdate: function() {
+    }
+}
+
+
 options.init();
+
+version.check();
 
 // Show "bcc" page action icon for all Gmail pages
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
@@ -131,6 +162,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
         break;
     case 'setOptions':
         options.set(request.options, sender.tab);
+        sendResponse({status: 'done'});
         break;
     case 'openOptionsPage':
         chrome.tabs.create({url: "options/options.html"});
@@ -144,7 +176,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
         sendResponse({});
         break;
     default:
-        console.error('AlwaysBcc: Invalid command sent to bg.js: ' + request.command);
+        console.error('AlwaysBcc: Invalid command sent to background.js: ' + request.command);
     }
 });
 

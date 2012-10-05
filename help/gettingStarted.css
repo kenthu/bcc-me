@@ -1,0 +1,77 @@
+body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    color: #303942;
+}
+
+h1 {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 25px;
+}
+
+p {
+    margin-left: 25px;
+    font-size: 14px;
+}
+
+img {
+    margin-left: 25px;
+    border: 1px solid #777;
+}
+
+div.settingLine {
+    margin-top: 7px;
+    margin-left: 25px;
+    font-size: 13px;
+}
+
+input {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-size: 13px;
+}
+
+#email {
+    width: 20em
+}
+
+#saveConfirmation {
+    display: none;
+    background-color: #F9EDBE;
+    border-bottom-color: #F0C36D;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-left-color: #F0C36D;
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-color: #F0C36D;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-color: #F0C36D;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-top-style: solid;
+    border-top-width: 1px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px 0px;
+    color: #222;
+    font-size: 13px;
+    font-weight: bold;
+    height: 16px;
+    line-height: 16px;
+    margin-left: 10px;
+    padding-bottom: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 2px;
+}
+
+.pauseInstructions {
+    text-decoration: underline;
+}
