@@ -1,10 +1,10 @@
 document.body.onload = function() {
     // Initialize options to defaults, if not already set
-    chrome.extension.sendRequest({command: 'initOptions'}, getOptions);
+    chrome.extension.sendMessage({command: 'initOptions'}, getOptions);
 
     // Save button: save options and close window
     document.getElementById('saveButton').onclick = function() {
-        chrome.extension.sendRequest({command: 'setOptions', options: {
+        chrome.extension.sendMessage({command: 'setOptions', options: {
             activeStatus: (document.getElementById('activeStatus_active').checked ? 'active' : 'inactive'),
             displayMenu: (document.getElementById('displayMenu').checked ? 'true' : 'false'),
             email: document.getElementById('email').value
@@ -20,7 +20,7 @@ document.body.onload = function() {
 
 // Retrieve options
 function getOptions(response) {
-    chrome.extension.sendRequest({command: 'getOptions'}, loadOptions);
+    chrome.extension.sendMessage({command: 'getOptions'}, loadOptions);
 }
 
 // Load options

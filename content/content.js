@@ -43,15 +43,15 @@ function populateBccBox(bccBox, email) {
 }
 
 function toggleActiveStatus() {
-    chrome.extension.sendRequest({command: 'setOptions', options: {activeStatus: (activeStatus === 'active' ? 'inactive' : 'active')}});
+    chrome.extension.sendMessage({command: 'setOptions', options: {activeStatus: (activeStatus === 'active' ? 'inactive' : 'active')}});
 }
 
 function setDisplayMenuOff() {
-    chrome.extension.sendRequest({command: 'setOptions', options: {displayMenu: 'false'}});
+    chrome.extension.sendMessage({command: 'setOptions', options: {displayMenu: 'false'}});
 }
 
 function openOptionsPage() {
-    chrome.extension.sendRequest({command: 'openOptionsPage'});
+    chrome.extension.sendMessage({command: 'openOptionsPage'});
 }
 
 function htmlEncode(value) {
@@ -148,7 +148,7 @@ function handleUpdatedOptions(options) {
     if (options['activeStatus'] !== undefined) {
         //console.log('AlwaysBcc: Set activeStatus to "' + options['activeStatus'] + '" in content script');
         activeStatus = options['activeStatus'];
-        chrome.extension.sendRequest({command: 'setIcon'});
+        chrome.extension.sendMessage({command: 'setIcon'});
         $('#item_activeInactive').html(getActiveStatusMenuItemText());
     }
     if (options['displayMenu'] !== undefined) {
@@ -216,27 +216,27 @@ function checkInit(timeoutIndex) {
 
 function init() {
     // Initialize options to defaults, if not already set
-    chrome.extension.sendRequest({command: 'initOptions'});
+    chrome.extension.sendMessage({command: 'initOptions'});
 
     // Register tab
-    chrome.extension.sendRequest({command: 'registerTab'});
+    chrome.extension.sendMessage({command: 'registerTab'});
 
     // Set up handler to unregister tab when tab closes
     window.onbeforeunload = function() {
-        chrome.extension.sendRequest({command: 'unregisterTab'});
+        chrome.extension.sendMessage({command: 'unregisterTab'});
     };
 
     // Load and apply options
-    chrome.extension.sendRequest({command: 'getOptions'}, function(response) {
+    chrome.extension.sendMessage({command: 'getOptions'}, function(response) {
         handleUpdatedOptions(response.options);
     });
 
     // Set up handlers for updated options and statuses
-    chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-        if (request.command === 'handleUpdatedOptions') {
-            handleUpdatedOptions(request.options);
+    chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
+        if (message.command === 'handleUpdatedOptions') {
+            handleUpdatedOptions(message.options);
         } else {
-            console.error('AlwaysBcc: Invalid command sent to content script: ' + request.command);
+            console.error('AlwaysBcc: Invalid command sent to content script: ' + message.command);
         }
     });
 

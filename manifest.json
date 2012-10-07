@@ -29,7 +29,7 @@
             "js": ["js/jquery-1.8.2.min.js", "content/content.js"],
             "all_frames": true
         }
-    ]
+    ],
 
-
+    "minimum_chrome_version": "20"  /* Need Chrome 20 for sendMessage/onMessage */
 }

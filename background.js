@@ -86,14 +86,14 @@ var options = {
     // Propagate a setting change to all tabs
     propagate: function(firstTabToApply, optionsToSet) {
         // Handle this tab first
-        chrome.tabs.sendRequest(firstTabToApply.id, {command: 'handleUpdatedOptions', options: optionsToSet});
+        chrome.tabs.sendMessage(firstTabToApply.id, {command: 'handleUpdatedOptions', options: optionsToSet});
 
         // Handle all other tabs
         var allTabs = tabs.getTabs();
         for (var i = 0; i < allTabs.length; i++) {
             var tabId = allTabs[i];
             if (tabId !== firstTabToApply.id) {
-                chrome.tabs.sendRequest(tabId, {command: 'handleUpdatedOptions', options: optionsToSet});
+                chrome.tabs.sendMessage(tabId, {command: 'handleUpdatedOptions', options: optionsToSet});
             }
         }
     },
@@ -147,8 +147,8 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     }
 });
 
-chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-    switch (request.command) {
+chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
+    switch (message.command) {
     case 'registerTab':
         //console.log('AlwaysBcc: Registering tab ' + String(sender.tab.id));
         tabs.register(sender.tab.id);
@@ -161,7 +161,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
         sendResponse({options: options.getAll()});
         break;
     case 'setOptions':
-        options.set(request.options, sender.tab);
+        options.set(message.options, sender.tab);
         sendResponse({status: 'done'});
         break;
     case 'openOptionsPage':
@@ -176,7 +176,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
         sendResponse({});
         break;
     default:
-        console.error('AlwaysBcc: Invalid command sent to background.js: ' + request.command);
+        console.error('AlwaysBcc: Invalid command sent to background.js: ' + message.command);
     }
 });
 

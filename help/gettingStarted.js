@@ -1,10 +1,10 @@
 document.body.onload = function() {
     // Initialize options to defaults, if not already set
-    chrome.extension.sendRequest({command: 'initOptions'});
+    chrome.extension.sendMessage({command: 'initOptions'});
 
     // Save button: save options and close window
     document.getElementById('saveButton').onclick = function() {
-        chrome.extension.sendRequest({command: 'setOptions', options: {
+        chrome.extension.sendMessage({command: 'setOptions', options: {
             email: document.getElementById('email').value
         }}, onSaved);
     };
