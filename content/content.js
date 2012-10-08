@@ -145,23 +145,33 @@ function showOrHideMenu(oldValue, newValue) {
 }
 
 function handleUpdatedOptions(options) {
-    if (options['activeStatus'] !== undefined) {
-        //console.log('AlwaysBcc: Set activeStatus to "' + options['activeStatus'] + '" in content script');
-        activeStatus = options['activeStatus'];
+    for (key in options) {
+        handleUpdatedOption(key, options[key]);
+    }
+}
+
+function handleUpdatedOption(option, value) {
+    if (value === undefined) return;
+
+    switch (option) {
+    case 'activeStatus':
+        //console.log('AlwaysBcc: Set activeStatus to "' + value + '" in content script');
+        activeStatus = value;
         chrome.extension.sendMessage({command: 'setIcon'});
         $('#item_activeInactive').html(getActiveStatusMenuItemText());
-    }
-    if (options['displayMenu'] !== undefined) {
-        //console.log('AlwaysBcc: Set displayMenu to "' + options['displayMenu'] + '" in content script');
-        showOrHideMenu(displayMenu, options['displayMenu']);
-        displayMenu = options['displayMenu'];
-    }
-    if (options['email'] !== undefined) {
-        //console.log('AlwaysBcc: Set email to "' + options['email'] + '" in content script');
-        email = options['email'];
+        break;
+    case 'displayMenu':
+        //console.log('AlwaysBcc: Set displayMenu to "' + value + '" in content script');
+        showOrHideMenu(displayMenu, value);
+        displayMenu = value;
+        break;
+    case 'email':
+        //console.log('AlwaysBcc: Set email to "' + value + '" in content script');
+        email = value;
         $('#item_email').html(getEmailMenuItemText());
         // email setting will affect what active status gets displayed 
         $('#item_activeInactive').html(getActiveStatusMenuItemText());
+        break;
     }
 }
 
@@ -216,27 +226,20 @@ function checkInit(timeoutIndex) {
 
 function init() {
     // Initialize options to defaults, if not already set
-    chrome.extension.sendMessage({command: 'initOptions'});
-
-    // Register tab
-    chrome.extension.sendMessage({command: 'registerTab'});
-
-    // Set up handler to unregister tab when tab closes
-    window.onbeforeunload = function() {
-        chrome.extension.sendMessage({command: 'unregisterTab'});
-    };
-
-    // Load and apply options
-    chrome.extension.sendMessage({command: 'getOptions'}, function(response) {
-        handleUpdatedOptions(response.options);
+    chrome.extension.sendMessage({ command: 'initOptions' }, function() {
+        // When done initializing options, load and apply options
+        chrome.extension.sendMessage({ command: 'getOptions' }, function(response) {
+            handleUpdatedOptions(response.options);
+        });
     });
 
-    // Set up handlers for updated options and statuses
-    chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
-        if (message.command === 'handleUpdatedOptions') {
-            handleUpdatedOptions(message.options);
-        } else {
-            console.error('AlwaysBcc: Invalid command sent to content script: ' + message.command);
+    // Set up listener for updated options
+    chrome.storage.onChanged.addListener(function(changes, areaName) {
+        for (key in changes) {
+            var storageChange = changes[key];
+            if (storageChange.oldValue !== storageChange.newValue) {
+                handleUpdatedOption(key, storageChange.newValue);
+            }
         }
     });
 

@@ -20,7 +20,7 @@
     "page_action": {
         "default_title": "AlwaysBcc for Gmail\n(left-click to pause/unpause)\n(right-click for options)"
     },
-    "permissions" : ["tabs"],
+    "permissions" : ["tabs", "storage"],
     "options_page": "options/options.html",
     "content_scripts": [
         {
@@ -31,5 +31,5 @@
         }
     ],
 
-    "minimum_chrome_version": "20"  /* Need Chrome 20 for sendMessage/onMessage */
+    "minimum_chrome_version": "20"  /* Need Chrome 20 for sendMessage/onMessage and chrome.storage API */
 }

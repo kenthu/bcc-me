@@ -1,32 +1,7 @@
-// Object that tracks tabIds for all Gmail tabs
-var tabs = {
-    hashTable: {},
-
-    register: function(tabId) {
-        this.hashTable[tabId] = true;
-    },
-
-    unregister: function(tabId) {
-        delete this.hashTable[tabId];
-    },
-
-    // Return array of tabIds.  Guaranteed to only return tabId if it's a number.
-    getTabs: function() {
-        var tabArray = [];
-        var tabId;
-        for (var tabIdString in this.hashTable) {
-            tabId = parseInt(tabIdString);
-            if (!isNaN(tabId)) {
-                tabArray.push(tabId);
-            }
-        }
-        return tabArray;
-    }
-};
-
 // Object to control extension options
 var options = {
-    // Mapping of option names to their default values (values must be strings, because that's what localStorage uses)
+    // Mapping of option names to their default values.  Values are strings because we used to store options in
+    // localStorage, before chrome.storage became available.
     defaults: {
         activeStatus: 'active',	// possible values: 'active', 'inactive'
         displayMenu: 'true',	// possible values: 'true', 'false'
@@ -50,59 +25,62 @@ var options = {
     },
 
     // Set defaults on all invalid/undefined options, so we don't have to worry about undefineds
-    init: function() {
-        for (var option in this.defaults) {
-            if (!(this.isValid(option, localStorage[option]))) {
-                localStorage[option] = this.defaults[option];
+    init: function(callback) {
+        var self = this;
+        this.getAll(function(allOptions) {
+            var optionsToSet = {};
+            for (var option in self.defaults) {
+                if (!(self.isValid(option, allOptions[option]))) {
+                    optionsToSet[option] = self.defaults[option];
+                }
             }
-        }
+            chrome.storage.local.set(optionsToSet, callback);
+        });
     },
 
-    get: function(option) {
+    get: function(option, callback) {
         if (option in this.defaults) {
-            return localStorage[option];
+            chrome.storage.local.get(option, function(items) {
+                callback(items[option]);
+            });
         }
     },
 
-    getAll: function() {
-        return {
-            activeStatus: localStorage['activeStatus'],
-            displayMenu: localStorage['displayMenu'],
-            email: localStorage['email']
-        }
+    getAll: function(callback) {
+        chrome.storage.local.get(Object.keys(this.defaults), function(items) {
+            callback({
+                activeStatus: items.activeStatus,
+                displayMenu: items.displayMenu,
+                email: items.email
+            });
+        });
     },
 
-    set: function(optionsToSet, firstTabToApply) {
+    // callback function is optional
+    set: function(optionsToSet, callback) {
         var validatedOptions = {};
         for (var option in optionsToSet) {
             if (this.isValid(option, optionsToSet[option])) {
-                localStorage[option] = optionsToSet[option];
                 validatedOptions[option] = optionsToSet[option];
             }
         }
-        this.propagate(firstTabToApply, validatedOptions);
-    },
-
-    // Propagate a setting change to all tabs
-    propagate: function(firstTabToApply, optionsToSet) {
-        // Handle this tab first
-        chrome.tabs.sendMessage(firstTabToApply.id, {command: 'handleUpdatedOptions', options: optionsToSet});
-
-        // Handle all other tabs
-        var allTabs = tabs.getTabs();
-        for (var i = 0; i < allTabs.length; i++) {
-            var tabId = allTabs[i];
-            if (tabId !== firstTabToApply.id) {
-                chrome.tabs.sendMessage(tabId, {command: 'handleUpdatedOptions', options: optionsToSet});
+        chrome.storage.local.set(validatedOptions, function() {
+            if (callback !== undefined) {
+                callback();
             }
-        }
+        });
     },
 
-    // For testing only ...
+    // For dev only ...
     clear: function() {
-        for (var option in this.defaults) {
-            delete localStorage[option];
-        }
+        chrome.storage.local.remove(Object.keys(this.defaults));
+    },
+
+    // For dev only ...
+    showAll: function() {
+        this.getAll(function(allOptions) {
+            console.log(allOptions);
+        });
     }
 };
 
@@ -142,48 +120,53 @@ version.check();
 // Show "bcc" page action icon for all Gmail pages
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     if (tab.url.indexOf('http://mail.google.com/') === 0 || tab.url.indexOf('https://mail.google.com/') === 0) {
-        chrome.pageAction.setIcon({path: getIconFilename(), tabId: tabId});
+        getIconFilename(function(iconFilename) {
+            chrome.pageAction.setIcon({ path: iconFilename, tabId: tabId });
+        });
         chrome.pageAction.show(tabId);
     }
 });
 
 chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
     switch (message.command) {
-    case 'registerTab':
-        //console.log('AlwaysBcc: Registering tab ' + String(sender.tab.id));
-        tabs.register(sender.tab.id);
-        break;
-    case 'unregisterTab':
-        //console.log('AlwaysBcc: Unregistering tab ' + String(sender.tab.id));
-        tabs.unregister(sender.tab.id);
-        break;
     case 'getOptions':
-        sendResponse({options: options.getAll()});
+        options.getAll(function(allOptions) {
+            sendResponse({options: allOptions});
+        });
         break;
     case 'setOptions':
-        options.set(message.options, sender.tab);
-        sendResponse({status: 'done'});
+        options.set(message.options, function() {
+            sendResponse({status: 'done'});
+        });
         break;
     case 'openOptionsPage':
         chrome.tabs.create({url: "options/options.html"});
         break;
     case 'setIcon':
-        chrome.pageAction.setIcon({path: getIconFilename(), tabId: sender.tab.id});
+        getIconFilename(function(iconFilename) {
+            chrome.pageAction.setIcon({ path: iconFilename, tabId: sender.tab.id });
+        });
         break;
     case 'initOptions':
-        options.init();
-        // Send empty response so that options page can proceed
-        sendResponse({});
+        options.init(function() {
+            // Send empty response so that dependent code can continue
+            sendResponse({});
+        });
         break;
     default:
         console.error('AlwaysBcc: Invalid command sent to background.js: ' + message.command);
     }
+    return true;
 });
 
-function getIconFilename() {
-    return 'icons/' + (options.get('activeStatus') === 'active' ? 'bcc.png' : 'bccOff.png');
+function getIconFilename(callback) {
+    options.get('activeStatus', function(activeStatus) {
+        callback('icons/' + (activeStatus === 'active' ? 'bcc.png' : 'bccOff.png'));
+    });
 }
 
 chrome.pageAction.onClicked.addListener(function(tab) {
-    options.set({activeStatus: options.get('activeStatus') === 'active' ? 'inactive' : 'active'}, tab);
+    options.get('activeStatus', function(activeStatus) {
+        options.set({ activeStatus: activeStatus === 'active' ? 'inactive' : 'active' });
+    });
 });
