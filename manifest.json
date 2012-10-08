@@ -14,14 +14,11 @@
     },
 */
 
-/* need to actually create these icons */
-
-    "background": { "scripts": ["background.js"] },
+	// Other manifest fields
     "page_action": {
         "default_title": "AlwaysBcc for Gmail\n(left-click to pause/unpause)\n(right-click for options)"
     },
-    "permissions" : ["tabs", "storage"],
-    "options_page": "options/options.html",
+    "background": { "persistent": true, "scripts": ["background.js"] },
     "content_scripts": [
         {
             "matches": ["http://mail.google.com/*", "https://mail.google.com/*"],
@@ -30,6 +27,7 @@
             "all_frames": true
         }
     ],
-
-    "minimum_chrome_version": "20"  /* Need Chrome 20 for sendMessage/onMessage and chrome.storage API */
+    "minimum_chrome_version": "20",  /* Need Chrome 20 for sendMessage/onMessage and chrome.storage API */
+    "options_page": "options/options.html",
+    "permissions" : ["tabs", "storage"]
 }
