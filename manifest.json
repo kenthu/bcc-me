@@ -6,13 +6,11 @@
 
     // Recommended
     "description": "Automatically set BCC on all outgoing email",
-/*
     "icons": {
-        "16": "icon16.png",
-        "48": "icon48.png",
-        "128": "icon128.png"
+        "16": "icons/icon16.png",	// "used as the favicon for an extension's pages"
+        "48": "icons/icon48.png",	// "used in the extensions management page (chrome://extensions)"
+        "128": "icons/icon128.png"	// "used during installation and by the Chrome Web Store"
     },
-*/
 
     // Other manifest fields
     "page_action": {

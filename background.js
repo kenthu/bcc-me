@@ -178,7 +178,7 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
 
 function getIconFilename(callback) {
     options.get('activeStatus', function(activeStatus) {
-        callback('icons/' + (activeStatus === 'active' ? 'bcc.png' : 'bccOff.png'));
+        callback('icons/' + (activeStatus === 'active' ? 'pageAction_on.png' : 'pageAction_off.png'));
     });
 }
 
