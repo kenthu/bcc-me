@@ -1,18 +1,13 @@
 {
-    // Required
     "name": "AlwaysBcc for Gmail",
-    "version": "0.1",  // When update here, remember to update version.current() in background.js
+    "version": "0.1",
     "manifest_version": 2,
-
-    // Recommended
     "description": "Automatically set BCC on all outgoing email",
     "icons": {
-        "16": "icons/icon16.png",	// "used as the favicon for an extension's pages"
-        "48": "icons/icon48.png",	// "used in the extensions management page (chrome://extensions)"
-        "128": "icons/icon128.png"	// "used during installation and by the Chrome Web Store"
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
     },
-
-    // Other manifest fields
     "page_action": {
         "default_title": "AlwaysBcc for Gmail\n(left-click to pause/unpause)\n(right-click for options)"
     },
@@ -25,7 +20,7 @@
             "all_frames": true
         }
     ],
-    "minimum_chrome_version": "20",  /* Need Chrome 20 for sendMessage/onMessage and chrome.storage API */
+    "minimum_chrome_version": "20",
     "options_page": "options/options.html",
     "permissions" : ["tabs", "storage"]
 }
