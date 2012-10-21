@@ -1,6 +1,6 @@
 ﻿{
     "name": "Bcc Me for Gmail™",
-    "version": "0.1",
+    "version": "0.1.1",
     "manifest_version": 2,
     "description": "Automatically Bcc any email address whenever you send an email in Gmail™",
     "icons": {
