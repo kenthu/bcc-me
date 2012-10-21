@@ -105,7 +105,7 @@ var options = {
 var version = {
     // Other people seem to use chrome.app.getDetails().version, but that isn't currently a supported public
     // API.  Once there's something supported, we can stop putting the current version in multiple places.
-    current: "0.1",
+    current: "0.1.2",
 
     check: function() {
         // Check if the version has changed.
