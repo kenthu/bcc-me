@@ -17,7 +17,7 @@ along with Bcc Me for Gmail.  If not, see <http://www.gnu.org/licenses/>.
 
 var MAX_RETRIES = 20;
 var TIME_TO_FIRST_CHECK = 500;
-var TIME_BETWEEN_CHECKS = 1500;
+var TIME_BETWEEN_CHECKS = 500;
 var INIT_TIMEOUTS = [0.25, 0.25, 0.5, 1, 1, 2, 3, 5];
 
 var activeStatus;
