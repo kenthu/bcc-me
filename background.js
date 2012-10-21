@@ -1,18 +1,18 @@
 /*
 Copyright 2012 Kent Hu
 
-AlwaysBCC for Gmail is free software: you can redistribute it and/or modify
+Bcc Me for Gmail is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-AlwaysBCC for Gmail is distributed in the hope that it will be useful,
+Bcc Me for Gmail is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with AlwaysBCC for Gmail.  If not, see <http://www.gnu.org/licenses/>.
+along with Bcc Me for Gmail.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Object to control extension options
@@ -171,7 +171,7 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
         });
         break;
     default:
-        console.error('AlwaysBcc: Invalid command sent to background.js: ' + message.command);
+        console.error('Bcc Me: Invalid command sent to background.js: ' + message.command);
     }
     return true;
 });

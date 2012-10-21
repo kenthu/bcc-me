@@ -1,18 +1,18 @@
 /*
 Copyright 2012 Kent Hu
 
-AlwaysBCC for Gmail is free software: you can redistribute it and/or modify
+Bcc Me for Gmail is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-AlwaysBCC for Gmail is distributed in the hope that it will be useful,
+Bcc Me for Gmail is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with AlwaysBCC for Gmail.  If not, see <http://www.gnu.org/licenses/>.
+along with Bcc Me for Gmail.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #abcc_menu {
@@ -41,13 +41,13 @@ along with AlwaysBCC for Gmail.  If not, see <http://www.gnu.org/licenses/>.
     border-right-style: solid;
     border-right-width: 1px;
     display: block;
-    padding: 3px 9px 3px 5px;
+    padding: 3px 7px 3px 7px;
     font-weight: bold;
 }
 
 /* alternate Compact version */
 .gbesi#gb #gbzw #abcc_menuLink, .gbes#gbzw #abcc_menuLink {
-    padding: 2px 9px 3px 5px;
+    padding: 2px 7px 3px 7px;
 }
 
 #abcc_menuLink:hover {
@@ -96,6 +96,11 @@ along with AlwaysBCC for Gmail.  If not, see <http://www.gnu.org/licenses/>.
     box-shadow: rgba(0, 0, 0, 0.199219) 0px 2px 4px 0px;
     padding: 10px 0;
     position: absolute;
+    top: 29px;
+}
+
+/* alternate Compact version */
+.gbesi#gb #gbzw #abcc_menuDropdown, .gbes#gbzw #abcc_menuDropdown {
     top: 23px;
 }
 

@@ -1,18 +1,18 @@
 /*
 Copyright 2012 Kent Hu
 
-AlwaysBCC for Gmail is free software: you can redistribute it and/or modify
+Bcc Me for Gmail is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-AlwaysBCC for Gmail is distributed in the hope that it will be useful,
+Bcc Me for Gmail is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with AlwaysBCC for Gmail.  If not, see <http://www.gnu.org/licenses/>.
+along with Bcc Me for Gmail.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 var MAX_RETRIES = 20;
@@ -24,7 +24,7 @@ var activeStatus;
 var displayMenu = 'false';  // Start with 'false' so that on page load, menu will be displayed if displayMenu is actually 'true'
 var email;
 
-// Set to true when user clicks on AlwaysBcc menu
+// Set to true when user clicks on Bcc Me menu
 var showingMenuItems = false;
 
 function findBcc() {
@@ -129,7 +129,7 @@ function showMenu(retries) {
         more.after('\
             <li id="abcc_menu">	\
                 <span id="abcc_menuLink">	\
-                    <span>AlwaysBcc</span>	\
+                    <span>Bcc Me</span>	\
                     <span id="abcc_menuTriangle"></span>	\
                 </span>	\
             </li>');
@@ -150,14 +150,14 @@ function hideMenu() {
 function showOrHideMenu(oldValue, newValue) {
     if (oldValue !== newValue) {
         if (newValue === 'true') {
-            //console.log('AlwaysBcc: Showing menu');
+            //console.log('Bcc Me: Showing menu');
             showMenu(0);
         } else {
-            //console.log('AlwaysBcc: Hiding menu');
+            //console.log('Bcc Me: Hiding menu');
             hideMenu();
         }
     } else {
-        //console.log('AlwaysBcc: No change in menu visibility');
+        //console.log('Bcc Me: No change in menu visibility');
     }
 }
 
@@ -172,18 +172,18 @@ function handleUpdatedOption(option, value) {
 
     switch (option) {
     case 'activeStatus':
-        //console.log('AlwaysBcc: Set activeStatus to "' + value + '" in content script');
+        //console.log('Bcc Me: Set activeStatus to "' + value + '" in content script');
         activeStatus = value;
         chrome.extension.sendMessage({command: 'setIcon'});
         $('#item_activeInactive').html(getActiveStatusMenuItemText());
         break;
     case 'displayMenu':
-        //console.log('AlwaysBcc: Set displayMenu to "' + value + '" in content script');
+        //console.log('Bcc Me: Set displayMenu to "' + value + '" in content script');
         showOrHideMenu(displayMenu, value);
         displayMenu = value;
         break;
     case 'email':
-        //console.log('AlwaysBcc: Set email to "' + value + '" in content script');
+        //console.log('Bcc Me: Set email to "' + value + '" in content script');
         email = value;
         $('#item_email').html(getEmailMenuItemText());
         // email setting will affect what active status gets displayed 

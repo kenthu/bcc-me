@@ -1,15 +1,15 @@
-{
-    "name": "AlwaysBcc for Gmail",
+﻿{
+    "name": "Bcc Me for Gmail™",
     "version": "0.1",
     "manifest_version": 2,
-    "description": "Automatically set BCC on all outgoing email",
+    "description": "Automatically Bcc any email address whenever you send an email in Gmail™",
     "icons": {
         "16": "icons/icon16.png",
         "48": "icons/icon48.png",
         "128": "icons/icon128.png"
     },
     "page_action": {
-        "default_title": "AlwaysBcc for Gmail\n(left-click to pause/unpause)\n(right-click for options)"
+        "default_title": "Bcc Me for Gmail™\n(left-click to pause/unpause)\n(right-click for options)"
     },
     "background": { "persistent": true, "scripts": ["background.js"] },
     "content_scripts": [
